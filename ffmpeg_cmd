@@ -1,0 +1,11 @@
+#doesn't work
+ffmpeg -s 320x240 -f video4linux2 -i /dev/video0 -f mpeg1video -d 800k -r 30 https://picamserver.herokuapp.com/sreamin
+#errors
+ffmpeg -s 320x240 -f video4linux2 -i /dev/video0 -f mpegts -d 800k -r 30 https://picamserver.herokuapp.com/streamin
+
+
+ffmpeg -s 320x240 -f video4linux2 -i /dev/video0 -f mpeg1 -codac:v mpeg1video -bf 0 -codac:a mp2 -d 800k -r 30 https://picamserver.herokuapp.com/streamin
+
+
+#working
+ffmpeg -s 640x480 -f video4linux2 -i /dev/video0 -f mpegts -codec:v mpeg1video -bf 0 -codec:a mp2 -r 30 https://picamserver.herokuapp.com/streamin

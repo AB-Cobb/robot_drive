@@ -1,4 +1,3 @@
-
 const GIPIO = require('onoff').Gpio
 
 let motor_left = {
@@ -33,58 +32,24 @@ let motor_right = {
         this.pin2.writeSync(0)
     }
 }
-
+//*/
+const ffmpeg_cmd = "ffmpeg -s 640x480 -f video4linux2 -i /dev/video0 -f mpegts -codec:v mpeg1video -bf 0 -codec:a mp2 -r 30 https://picamserver.herokuapp.com/streamin"
+var exec = require('child_process').exec;
+exec(ffmpeg_cmd, (err, stdout, stderr) => {
+    if (err){console.log("pi cam err : ", err)}
+    console.log(
+        'stdout' + stdout
+    )
+})
 
 const robot_serve_url ='https://robotserve.herokuapp.com/'
 const socketIO = require('socket.io-client')
-const socketIOstream = require('socket.io-stream')
-
-const { StreamCamera, Codec } = require ('pi-camera-connect')
-const webcamStream = new StreamCamera( {codac : Codec.H264} )
 
 console.log('RUNNING')
 
 socket = socketIO(robot_serve_url)
 socket.emit('PI_log', {txt: 'PI online... awaiting command'} )
-const fs = require ("fs");
 
-const runApp = async () => {
-
-    const streamCamera = new StreamCamera({
-        codec: Codec.H264
-    });
-
-    const videoStream = streamCamera.createStream();
-
-    const writeStream = fs.createWriteStream("video-stream_2.h264");
-
-    // Pipe the video stream to our video file
-    videoStream.pipe(writeStream);
-    console.log('awaiting cam start')
-    await streamCamera.startCapture();
-    console.log("cam is started")
-    // We can also listen to data events as they arrive
-    videoStream.on("data", data => console.log("New data", data));
-    videoStream.on("end", data => console.log("Video stream has ended"));
-
-    // Wait for 5 seconds
-    await new Promise(resolve => setTimeout(() => resolve(), 5000));
-
-    await streamCamera.stopCapture();
-};
-
-runApp();
-
-/*
-var outstream = socketIOstream.createStream()
-webcamStream.startCapture().then(() => {
-    console.log('cam stream started')
-    socketIOstream(socket).emit('PI_cam', outstream)
-    webcamStream.pipe(outstream)
-    webcamStream.on("data", data => console.log("New data", data));
-})
-
-//*/
 socket.on('cmd', data => {
     //console.log('command : ', data.drive)
     //socket.emit('PI_log', {txt : "Revicived command" + data.drive})

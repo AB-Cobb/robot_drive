@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/AB-Cobb/robot_drive#readme",
   "dependencies": {
+    "cmake": "0.0.4",
     "pi-camera-connect": "^0.3.0",
+    "rpio": "^2.1.1",
     "socket.io-stream": "^0.9.1"
   }
 }
